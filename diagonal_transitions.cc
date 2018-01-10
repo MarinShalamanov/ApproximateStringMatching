@@ -49,14 +49,11 @@ void ComputeSuffixArray(const string& p, const string& t) {
     len_text = t.length();
 
     const string str = p + t;
-    cout << str << endl;
     n = str.length();
 
     for (int i = 0; i < n; i++) {
         suffix_array_pos[0][i] = str[i] - 'a';
-        cout << suffix_array_pos[0][i] << " ";
     }
-    cout << endl;
 
     vector< tuple<int, int, int> > l (n);
     const int log_n = CeilLog(n);
@@ -77,10 +74,6 @@ void ComputeSuffixArray(const string& p, const string& t) {
                 suffix_array_pos[k][pos] = i;
             }
         }
-        for (int i = 0; i < n; i++) {
-            cout << suffix_array_pos[k][i] << " ";
-        }
-        cout << endl;
     }
 
     for (int i = 0; i < n; i++) {
@@ -115,20 +108,10 @@ int ComputeLongestCommonPrefix (int pi, int ti) {
 void PreprocessLCP() {
     const int log_n = CeilLog(n);
 
-    /*
-    cout << "\n\nLCP\n";
-    for (int i = 0; i+1 < n; i++) {
-        cout << i%10 << " ";
-    }
-    cout << endl;
-    */
-
     for (int i = 0; i+1 < n; i++) {
         lcp_mins[0][i] =
             ComputeLongestCommonPrefixInConcat(suffix_array[i], suffix_array[i+1]);
-        cout << lcp_mins[0][i] << " ";
     }
-    cout << endl;
 
     for (int k = 1; k <= log_n; k++) {
         for (int i = 0; i+1 < n; i++) {
@@ -139,9 +122,7 @@ void PreprocessLCP() {
                 lcp_mins[k][i] =
                     min(lcp_mins[k-1][i], lcp_mins[k-1][next_half_start]);
             }
-            //cout << lcp_mins[k][i] << " ";
         }
-        //cout << endl;
     }
 }
 
@@ -156,12 +137,6 @@ int GetLongestCommonPrefixInConcat(int i, int j) {
 
     const int len = suff_j-suff_i;
     const int log_len = FloorLog(len);
-    /*
-    cout << "len = " << len << endl;
-    cout << "suff_j = " << suff_j << endl;
-    cout << "suff_i = " << suff_i << endl;
-    cout << "log_len  = " << log_len << endl;
-    */
     const int lcp = min(lcp_mins[log_len][suff_i], lcp_mins[log_len][suff_j-(1<<log_len)]);
     return lcp;
 }
@@ -202,12 +177,10 @@ int ComputeEditDistance(const string& p,
             d = j - i - 1;
 
             col += GetLongestCommonPrefix( col - d, col);
-            //while (col < n && col - d < m && p[col - d] == t[col]) ++col;
             current[i] = min(col, m + d);
         }
         if (current[k + 1] == m + j - k - 2) {
-                matches++; // matching substring found at position current[k + 1]
-                cout << "pos: " << current[k + 1] << endl;
+            matches++; // matching substring found at position current[k + 1]
         }
         swap(preprevious, previous);
         swap(previous, current);
@@ -218,7 +191,5 @@ int ComputeEditDistance(const string& p,
 } // namespace EditDistance
 
 int main() {
-    cout << "res= " << EditDistance::ComputeEditDistance("pesho", "peshxxxxpeshox", 1) << endl;
-    // cout << EditDistance::GetLongestCommonPrefix(0, 9) << endl;
-    // cout << EditDistance::ComputeLongestCommonPrefix(0, 9) << endl;
+    cout << EditDistance::ComputeEditDistance("pesho", "peshxxxxpeshox", 1) << endl;
 }
